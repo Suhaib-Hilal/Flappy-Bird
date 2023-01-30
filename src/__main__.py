@@ -30,9 +30,9 @@ def main():
 
     # Create bird
     birds = {
-        "sprites/bluebird-0.png": ["sprites/bluebird-0.png", "sprites/bluebird-1.png", "sprites/bluebird-2.png"], 
-        "sprites/redbird-0.png": ["sprites/redbird-1.png", "sprites/redbird-1.png", "sprites/redbird-2.png"], 
-        "sprites/yellowbird-0.png": ["sprites/yellowbird-0.png", "sprites/yellowbird-1.png", "sprites/yellowbird-2.png"]
+        "sprites/redbird-0.png": [pygame.image.load("sprites/redbird-0.png"), pygame.image.load("sprites/redbird-1.png"), pygame.image.load("sprites/redbird-2.png")], 
+        "sprites/bluebird-0.png": [pygame.image.load("sprites/bluebird-0.png"), pygame.image.load("sprites/bluebird-1.png"), pygame.image.load("sprites/bluebird-2.png")], 
+        "sprites/yellowbird-0.png": [pygame.image.load("sprites/yellowbird-0.png"), pygame.image.load("sprites/yellowbird-1.png"), pygame.image.load("sprites/yellowbird-2.png")],
     }
     bird = Bird(200, 200, birds)
 
@@ -53,7 +53,7 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 start = False
                 game_on = True
-                bird.jump(ground.ground_rect)
+                bird.jump()
 
 
         # Draw surfaces
@@ -67,8 +67,11 @@ def main():
 
         # Animate ground
         if game_on:
-            bird.animate(WINDOW)
-            ground.animate()
+            if bird.check_collision(ground.ground_rect):
+                game_on = False
+            else:
+                bird.animate()
+                ground.animate()
 
         # Update display
         CLOCK.tick(FPS)
