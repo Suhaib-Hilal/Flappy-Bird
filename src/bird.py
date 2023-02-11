@@ -7,7 +7,7 @@ class Bird:
         self.chosen_bird = choice(list(birds.keys()))
         self.bird = pygame.image.load(self.chosen_bird)
         self.gravity = 0.3
-        self.y_velocity = 1
+        self.y_velocity = 0
         self.max_velocity = 4
         self.bird_rect = self.bird.get_rect()
         self.bird_rect.x = x
@@ -16,7 +16,8 @@ class Bird:
         self.flap_state = 0
         self.flap_timer = 0
         self.rotation = 0
-        self.jump_velocity = self.max_velocity * 20
+        self.jump_height = 100
+        self.jump_velocity = 0
 
     def draw(self, window: pygame.Surface):
         rotated_bird = pygame.transform.rotate(self.bird_animations[self.flap_state], self.rotation)
@@ -35,16 +36,20 @@ class Bird:
         self.apply_gravity()
 
     def jump(self):
-        self.bird_rect.y -= self.jump_velocity
-        # self.rotation = -self.jump_velocity * 5
-        # self.bird = pygame.transform.rotate(self.bird, self.rotation)
+        self.y_velocity = -7
+        t = 0
+        while self.y_velocity < 0:
+            t += 0.15
+            y = self.y_velocity * t + 0.5 * self.gravity * t**2
+            self.bird_rect.y += y
+            self.y_velocity += self.gravity
+            if self.y_velocity >= 0:
+                break
 
     def apply_gravity(self):
-        # self.rotation = self.jump_velocity * 5
-        self.bird_rect.y += self.y_velocity
-        if self.y_velocity <= self.max_velocity:
+        if self.y_velocity < self.max_velocity:
             self.y_velocity += self.gravity
-        # self.bird = pygame.transform.rotate(self.bird, self.rotation)
+        self.bird_rect.y += self.y_velocity
 
     def check_collision(self, collision_rect: pygame.Rect) -> bool:
         return self.bird_rect.colliderect(collision_rect)

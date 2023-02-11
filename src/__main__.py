@@ -3,8 +3,13 @@ import pygame
 from pygame import mixer
 from src.bird import Bird
 
-from src.obstacles import Ground
+from src.obstacles import Ground, Pipe
 from src.constants import FPS, HEIGHT, WIDTH
+
+
+def create_pipes():
+    """Create Pipes"""
+    pipe = Pipe(WIDTH - 50, HEIGHT - 168, pygame.image.load("sprites/pipe-green.png"))
 
 
 def main():
@@ -72,6 +77,7 @@ def main():
             else:
                 bird.animate()
                 ground.animate()
+                create_pipes()
 
         # Update display
         CLOCK.tick(FPS)
